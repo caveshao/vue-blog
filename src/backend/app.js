@@ -16,7 +16,7 @@ vueBlog.use(bodyParser.urlencoded({
 }));
 
 //设置跨域访问 还可以直接使用 cors 模块
-vueBlog.all('*', function (req, res, next) {
+vueBlog.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET");
@@ -25,24 +25,25 @@ vueBlog.all('*', function (req, res, next) {
     next();
 })
 
-vueBlog.get('/articles', function (req, res) {
-    MongoClient.connect('mongodb://localhost:27017/vueblog', function (err, client) {
+vueBlog.get('/articles', function(req, res) {
+    MongoClient.connect('mongodb://localhost:27017/vueblog', function(err, client) {
         console.log('Connected successfully to server');
         let db = client.db('vueblog');
-        findDocument(db, res, function () {});
+        findDocument(db, res, function() {});
         client.close();
     })
 })
 
 //归档页面
-vueBlog.get('/archives', function (req, res) {
-    MongoClient.connect('mongodb://localhost:27017', function (err, client) {
+vueBlog.get('/archives', function(req, res) {
+    MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         let db = client.db('vueblog');
         let collection = db.collection('articles');
-        collection.find({}).toArray(function (err, docs) {
+        collection.find({}).toArray(function(err, docs) {
             //将日期字符串转变为数字
-            docs.forEach(function (element) {
-                element.time = element.time.split("-");
+            docs.forEach(function(element) {
+                element.time = element.time ?
+                    element.time.split("-") || ["2199", "9", "6"];
                 element.time.push(
                     Number.parseInt(element.time[0]) * 366 +
                     Number.parseInt(element.time[1]) * 31 +
@@ -50,11 +51,11 @@ vueBlog.get('/archives', function (req, res) {
                 )
             })
             //进行由小到大的排序
-            docs.sort(function (a, b) {
+            docs.sort(function(a, b) {
                 return a.time[3] - b.time[3];
             })
             //返回数据
-            docs.forEach(function (element) {
+            docs.forEach(function(element) {
                 element.time.pop();
             })
             res.json(docs);
@@ -64,16 +65,16 @@ vueBlog.get('/archives', function (req, res) {
 })
 
 //登录处理
-vueBlog.post("/login", function (req, res) {
+vueBlog.post("/login", function(req, res) {
     console.log(req.body.admin);
     let body = req.body;
-    MongoClient.connect("mongodb://localhost:27017", function (err, client) {
+    MongoClient.connect("mongodb://localhost:27017", function(err, client) {
         let db = client.db('vueblog');
         let collection = db.collection('manager');
         collection.find({
             "admin": req.body.admin,
             "password": req.body.password,
-        }).toArray(function (err, docs) {
+        }).toArray(function(err, docs) {
             docs.length === 1 ?
                 res.json({
                     "login": true
@@ -87,14 +88,14 @@ vueBlog.post("/login", function (req, res) {
 })
 
 /* 删除文章 */
-vueBlog.post("/delete", function (req, res) {
+vueBlog.post("/delete", function(req, res) {
     let body = req.body;
-    MongoClient.connect("mongodb://localhost:27017", function (err, client) {
+    MongoClient.connect("mongodb://localhost:27017", function(err, client) {
         let db = client.db('vueblog');
         let collection = db.collection('articles');
         collection.deleteOne({
             "title": body.title
-        }, function (err, obj) {
+        }, function(err, obj) {
             if (err) throw err;
             console.log("删除成功");
             res.json({
@@ -106,14 +107,14 @@ vueBlog.post("/delete", function (req, res) {
 })
 
 /* 添加文章 */
-vueBlog.post("/add", function (req, res) {
+vueBlog.post("/add", function(req, res) {
     let body = req.body;
-    MongoClient.connect("mongodb://localhost:27017", function (err, client) {
+    MongoClient.connect("mongodb://localhost:27017", function(err, client) {
         let db = client.db('vueblog');
         let collection = db.collection('articles');
         collection.insert({
             "title": body.title
-        }, function (err, obj) {
+        }, function(err, obj) {
             if (err) throw err;
             console.log("添加成功");
             res.json({
@@ -125,14 +126,14 @@ vueBlog.post("/add", function (req, res) {
 })
 
 //文章列表
-var findDocument = function (db, res, callback) {
+var findDocument = function(db, res, callback) {
     var collection = db.collection('articles');
-    collection.find({}).toArray(function (err, docs) {
+    collection.find({}).toArray(function(err, docs) {
         res.json(docs);
         callback();
     })
 }
 
-vueBlog.listen(6565, function () {
+vueBlog.listen(6565, function() {
     console.log('server start at 6565');
 });

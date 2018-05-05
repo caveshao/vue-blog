@@ -23,8 +23,10 @@
     methods: {
       changeContent() {
         var me = this;
+        console.log("666");
         bus.$on("change-content", function(vm) {
           vm.content = me.article.content;
+          console.log(vm);
         });
       }
     }

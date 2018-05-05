@@ -1,6 +1,7 @@
 var webpack = require('webpack')
 var path = require('path')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
     entry: './src/frontend/main',
@@ -18,12 +19,21 @@ module.exports = {
                         img: 'src',
                         image: 'xlink:href',
                         'source': 'src',
+                    },
+                    loaders: {
+                        css: ExtractTextPlugin.extract({
+                            use: 'css-loader',
+                            fallback: 'vue-style-loader'
+                        })
                     }
                 }
             },
             {
                 test: /\.css$/,
-                use: 'css-loader',
+                use: ExtractTextPlugin.extract({
+                    use: 'css-loader',
+                    fallback: 'vue-style-loader'
+                }),
             },
             {
                 test: /\.html$/,
@@ -38,6 +48,7 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg|jpg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
+                    limit: 1000,
                     name: './images/[name].[hash:8].[ext]',
                 }
             },
@@ -59,7 +70,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/frontend/index.html',
             filename: './index.html',
-        })
+        }),
+        new ExtractTextPlugin("css/[name]-style.css")
     ],
     resolve: {
         extensions: ['.js', '.vue', '.json'],

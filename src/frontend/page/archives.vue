@@ -24,8 +24,8 @@
   </div>
 </template>
 <script>
-  import header from "../components/header";
-  import footer from "../components/footer";
+  const header = () => import("../components/header.vue");
+  const footer = () => import("../components/footer.vue");
   import axios from "axios";
 
   export default {

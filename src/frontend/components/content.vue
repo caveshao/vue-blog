@@ -19,6 +19,7 @@
     computed: {},
     mounted() {
       var me = this;
+      console.log("success");
       bus.$emit(
         "change-content",
         me

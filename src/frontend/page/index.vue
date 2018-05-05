@@ -6,9 +6,8 @@
   </div>
 </template>
 <script>
-  import header from "../components/header";
-  import footer from "../components/footer";
-  import section from "../components/section";
+  const header = () => import("../components/header.vue");
+  const footer = () => import("../components/footer.vue");
 
   export default {
     name: "index",
@@ -17,8 +16,7 @@
     },
     components: {
       "my-header": header,
-      "my-footer": footer,
-      "my-section": section
+      "my-footer": footer
     }
   };
 </script>

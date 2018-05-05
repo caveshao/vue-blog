@@ -1,5 +1,5 @@
 <template>
-  <router-view></router-view>
+  <router-view :key="$router.fullpath"></router-view>
 </template>
 <script>
   import index from "./page/index";

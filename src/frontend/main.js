@@ -2,14 +2,22 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-import App from './App.vue'
-import index from './page/index.vue'
-import archives from './page/archives.vue'
-import about from './page/about.vue'
-import login from './page/login.vue'
-import manager from './page/manager.vue'
-import section from './components/section.vue'
+import App from './App.vue';
 import content from './components/content.vue'
+
+/* 实现路由懒加载 */
+const index = () =>
+    import ("./page/index.vue");
+const archives = () =>
+    import ("./page/archives.vue");
+const about = () =>
+    import ("./page/about.vue");
+const login = () =>
+    import ("./page/login.vue");
+const manager = () =>
+    import ("./page/manager.vue");
+const section = () =>
+    import ("./components/section.vue");
 
 // import 'font-awesome/css/font-awesome.css'
 
@@ -82,7 +90,7 @@ new Vue({
 })
 
 var data = {
-    login: false 
+    login: false
 }
 
 window.bus = new Vue({

@@ -72,7 +72,9 @@
             ],
             headers: {
               "Content-Type": "application/x-www-form-urlencoded"
-            }
+            }  // 此处改变的是 request header 的 Content-Type: 字段
+               // Content-Type 也可以称为实体首部
+               // 实体首部是指针对请求报文和响应报文实体部分使用的首部
           })
             .then(res => {
               /* 使用 vue 可检测的数组变动方式，变动数组 */

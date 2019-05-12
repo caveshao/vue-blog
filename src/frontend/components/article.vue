@@ -31,7 +31,7 @@
       }
     }
   };
-</script>
+</script>  
 <style>
   article {
     border: 3px solid #8ef7d2;
